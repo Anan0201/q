@@ -1,0 +1,86 @@
+var cap = new ol.control.WMSCapabilities({ 
+    // target: $('.options').get(0),
+    target: document.body,
+    srs: ['EPSG:3948'],
+    cors: true,
+    optional: 'token',
+    services: {
+      'terrestre' :'https://ows.terrestris.de/osm/service'
+    },
+    // Show trace in the console
+    trace: true
+  });
+  map.addControl(cap);
+
+  cap.on('load', function(e) {
+    map.addLayer(e.layer);
+    e.layer.set('legend', e.options.data.legend);
+    plink.setUrlParam('url', e.options.source.url);
+    plink.setUrlParam('layer', e.options.source.params.LAYERS);
+  });
+
+  var url = plink.getUrlParam('url');
+  var layerName = plink.getUrlParam('layer');
+  if (url) {
+    cap.loadLayer(url, layerName);
+  }
+
+  /* Export .carte file */
+  function exportCarte() {
+    var lonlat = ol.proj.toLonLat(map.getView().getCenter());
+    var carte = {
+      "param": {
+        "lon": lonlat[0],
+        "lat": lonlat[1],
+        "rot": 0,
+        "zoom": map.getView().getZoom(),
+        "titre": "WMS",
+        "description": ""
+      },
+      "layers": []
+    }
+    map.getLayers().getArray().forEach(function(l) {
+      if (l.getSource() instanceof ol.source.TileWMS) {
+        var wms = {
+          "wms": true,
+          "type": "WMS",
+          "name": l.get('title'),
+          "titre": l.get('title'),
+          "visibility": l.getVisible(),
+          "opacity": l.getOpacity(),
+          "copyright": l.getSource().getAttributions()()[0] || '&copy;',
+          "wmsparam": {
+            "layer": {
+              "title": l.get('title'),
+              "extent": l.get('extent'),
+              "minResolution": l.getMinResolution(),
+              "maxResolution": l.getMaxResolution()
+            },
+            "source": {
+            "url": l.getSource().getUrls()[0],
+            "projection": "EPSG:3948",
+            "crossOrigin": "anonymous",
+            "params": {
+              "LAYERS": l.getSource().getParams().LAYERS,
+              "FORMAT": l.getSource().getParams().FORMAT,
+              "VERSION": l.getSource().getParams().VERSION
+            }
+            },
+            "attribution": {
+              "html": l.getSource().getAttributions()()[0] || '&copy;'
+            },
+            "originator": [],
+            "legend": []
+          },
+          "maxZoomCluster": 20,
+          "radiusCluster": 40
+        }
+        if (l.getSource().getParams().MAP) wms.wmsparam.source.params.MAP = l.getSource().getParams().MAP;
+        carte.layers.push(wms)
+      }
+    });
+    var blob = new Blob([JSON.stringify(carte, null, ' ')], {type: 'text/plain;charset=utf-8'});
+    saveAs(blob, 'carte.carte');
+  }
+
+// The end of the adding a wms bottom

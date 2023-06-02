@@ -1,0 +1,2846 @@
+
+<!doctype html>
+<html lang="en">
+
+<head>
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    
+
+
+   
+  
+  
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+  <meta name="description" content="An OL3 layerswitcher." />
+  <meta name="keywords" content="ol3, layer, layerswitcher, control,jQuery" />
+  <meta name="description" content="Control to add a grid reference to a map." />
+  <meta name="keywords" content="ol3, control, search, BAN, french, places, autocomplete" />
+  <meta name="description" content="ol.interaction.UndoRedo is an interaction to handle undo on a map." />
+  <meta name="keywords" content="ol, openlayers, undo, interaction" />
+  <meta name="description" content="DBPedia layer for OL3" />
+  <meta name="keywords" content="openlayers, control, source, WMS,WMTS, getCapabilities, capabilites" />
+  <meta name="description" content="An OL3 layerswitcher." />
+  <meta name="keywords" content="openlayers, ol, layer, layerswitcher, control" />
+  <meta name="description" content="DBPedia layer for OL3" />
+  <meta name="keywords" content="openlayers, control, source, WMTS, getCapabilities, capabilites" />
+    <script src="http://localhost:8080/webgis/lib/v6.5.0/build/ol.js"></script>
+    <script src="http://localhost:8080/webgis/lib/ol-layerswitcher/dist/ol-layerswitcher.js"></script>
+    <script src="http://localhost:8080/webgis/lib/jquery.min.js"></script>
+   
+  
+  <link rel="stylesheet" href="../style.css" />
+  
+  <!-- FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
+  <!-- jQuery -->
+  <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
+  <!-- IE 9 bug on ajax tranport  -->
+  <!--[if lte IE 9]>
+  <script type='text/javascript' src='//cdnjs.cloudflare.com/ajax/libs/jquery-ajaxtransport-xdomainrequest/1.0.3/jquery.xdomainrequest.min.js'></script>
+  <![endif]-->
+  
+
+  <!-- Openlayers -->
+  <link rel="stylesheet" href="https://openlayers.org/en/latest/legacy/ol.css" />
+  <script type="text/javascript" src="https://openlayers.org/en/latest/legacy/ol.js"></script>
+  <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=requestAnimationFrame,Element.prototype.classList,URL,Object.assign"></script>
+  
+  <!-- ol-ext -->
+  <link rel="stylesheet" href="../../dist/ol-ext.css" />
+  <script type="text/javascript" src="../../dist/ol-ext.js"></script>
+  <!-- Pointer events polyfill for old browsers, see https://caniuse.com/#feat=pointer -->
+  <script src="https://unpkg.com/elm-pep"></script>
+  
+  
+  <!-- Proj4 -->
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.3.14/proj4.js"></script>
+  <!-- filesaver-js -->
+  <script type="text/javascript" src="https://cdn.rawgit.com/eligrey/FileSaver.js/aa9f4e0e/FileSaver.min.js"></script>
+
+  <link rel="stylesheet" href="../style.css" />
+  
+  
+
+
+
+
+    <link rel="stylesheet" href="http://localhost:8080/webgis/lib/bootstrap.min.css">
+    <script type="text/javascript" src="http://localhost:8080/webgis/lib/bootstrap.min.js"></script>
+		
+		<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  
+  
+  
+
+
+ 
+    
+    
+    
+		
+		
+  
+  
+  
+   <style>
+   html,body {
+  height: 100%;
+  padding: 0;
+  margin: 0;
+    font-family: arial;
+  
+}
+  #map{
+	   position: absolute;
+	    top: 0px;
+           left: 20%;
+		width: 60%;
+	   height: 80%;
+      border: 1px solid #4CAF50;	   
+	  }
+	  #left{
+          width: 25%;
+		  left: 50px;
+		  top: 0%;
+        }
+	  #wms_layers_btn{
+  position: absolute;
+  z-index:500;
+	  top: 3px;
+     left: 80%;
+        }
+				#data{
+          width: 60%; 
+        }
+		 #table_data{
+	        position: absolute;
+			bottom: 0px;
+			overflow: scroll;
+            left: 20%;
+			right: 0px;
+			height: 0%;
+			border: 1px solid #4CAF50;
+	  }
+		#table{
+	    white-space:nowrap;
+		grid-template-areas:"head-fixed" "body-scrollable";
+                 }
+		#showData{
+		overflow: auto;
+          width: 100%;
+                }
+
+
+#table th {
+  position: -webkit-sticky; /* for Safari */
+  position: sticky;
+  top: 0;
+  background-color: darksalmon;
+}
+		
+		#table_wms_layers {
+      width: 100%;
+	  height: 350px;
+      white-space:nowrap;
+	  border-collapse: separate;
+	  font-family: arial;
+  font-size:14px;
+     
+        }
+#table_wms_layers th {
+  position: -webkit-sticky; /* for Safari */
+  position: sticky;
+  top: 0;
+  background-color: darksalmon;
+}
+#clear_btn{
+  position: absolute;
+  z-index:500;
+	  top: 5px;
+	  left: 75%;
+     
+        }
+.form-control {
+	 position: relative;
+	 top: 0px;
+     width:18%;
+	 
+           }
+	  .ol-mouse-position{
+	 top:97%;
+	 right:20%;
+	 position:absolute;
+	 font-weight: bold;
+	 }
+     .layer-switcher.shown {
+      max-height: 465px;
+     }
+	 
+	 
+	 #legend{
+	    z-index: 11;
+		padding: 2px 4px;
+		border: 1px solid grey;
+	    position: absolute;
+		bottom: 0px;
+		height: 45%;
+        overflow: scroll;
+        width:20%; 
+        left:0%;
+		background-color: #ffffff;
+		font-weight: bold;
+	  }
+	  
+	   .ol-popup {
+        position: absolute;
+        background-color: white;
+        -webkit-filter: drop-shadow(0 1px 4px rgba(0,0,0,0.2));
+        filter: drop-shadow(0 1px 4px rgba(0,0,0,0.2));
+        padding: 15px;
+        border-radius: 10px;
+        border: 1px solid #cccccc;
+        bottom: 12px;
+        left: -50px;
+        min-width: 280px;
+      }
+      .ol-popup:after, .ol-popup:before {
+        top: 100%;
+        border: solid transparent;
+        content: " ";
+        height: 0;
+        width: 0;
+        position: absolute;
+        pointer-events: none;
+      }
+      .ol-popup:after {
+        border-top-color: white;
+        border-width: 10px;
+        left: 48px;
+        margin-left: -10px;
+      }
+      .ol-popup:before {
+        border-top-color: #cccccc;
+        border-width: 11px;
+        left: 48px;
+        margin-left: -11px;
+      }
+      .ol-popup-closer {
+        text-decoration: none;
+        position: absolute;
+        top: 2px;
+        right: 8px;
+      }
+      .ol-popup-closer:after {
+        content: "X";
+      }
+	  #measure {
+		 position: absolute;
+      z-index:50;
+	  top: 60px;
+	  height:4px;
+	  right: 8%;
+	   
+	  }
+	  #getinfo{
+  position: absolute;
+      z-index:50;
+	  top: 65px;
+	  height:10px;
+	  right: 35%;
+     
+        }
+	  
+	  .tooltip {
+        position: relative;
+        background: rgba(0, 0, 0, 0.5);
+        border-radius: 4px;
+        color: white;
+        padding: 4px 8px;
+        opacity: 0.7;
+        white-space: nowrap;
+      }
+      .tooltip-measure {
+        opacity: 1;
+        font-weight: bold;
+      }
+      .tooltip-static {
+        background-color: #ffcc33;
+        color: black;
+        border: 1px solid white;
+      }
+      .tooltip-measure:before,
+      .tooltip-static:before {
+        border-top: 6px solid rgba(0, 0, 0, 0.5);
+        border-right: 6px solid transparent;
+        border-left: 6px solid transparent;
+        content: "";
+        position: absolute;
+        bottom: -6px;
+        margin-left: -7px;
+        left: 50%;
+      }
+      .tooltip-static:before {
+        border-top-color: #ffcc33;
+      }    
+  
+	 </style>
+	 <style>
+button.btn-settings {
+  margin: 25px;
+  padding: 20px 30px;
+  font-size: 1.2em;
+  background-color: #337ab7;
+  color: white;
+}
+button.btn-settings:active {
+  color: white;
+}
+.modal {
+    overflow: hidden;
+}
+.modal-dialog {
+    
+	height:300px;
+}
+.modal-header {
+  height:30px;
+  padding: 20px;
+  background-color:#18456b;
+  color:white;
+}
+.modal-title {
+  margin-top:-10px;
+  font-size:16px;
+}
+.modal-header .close {
+  margin-top:-10px;
+  color:#fff;
+}
+.modal-body {
+  color:#888;
+  padding: 5px 35px 20px;
+}
+.modal-body h3 {
+  text-align: center;
+}
+.modal-body p {
+  padding-top:10px;
+  font-size: 1.1em;
+}
+</style>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+ 
+  <!-- starting  for the mouse-->
+<style>
+
+	  .ol-mouse-position{
+	 top:97%;
+	 right:20%;
+	 position:absolute;
+	 font-weight: bold;
+	 }
+	 </style>
+  <!-- end for the mouse-->
+
+  <!-- for the wms capacities-->
+  <style>
+    #map {
+      width: 50%;
+      height: 1vh;
+    }
+    .ol-wmscapabilities ul {
+      padding: -18;
+    }
+  </style>
+  
+  <!--end  for the wms capacities-->
+  
+
+  <!-- here are the drawing bottom for drawing rectangular, circle, and whatsoever-->
+  <style>
+    .ol-button i {
+      color: inherit;
+    }
+    .ol-button.red button,
+    .ol-button.green button,
+    .ol-button.blue button {
+      color: #f00;
+      background-color: currentColor;
+      border: 2px solid currentColor;
+      width: 1em;
+      height: 1em;
+      border-radius: 0;
+    }
+    .ol-button.green button {
+      color: #0f0;
+    }
+    .ol-button.blue button {
+      color: #00f;
+    }
+    .ol-button.red button:hover,
+    .ol-button.green button:hover,
+    .ol-button.blue button:hover {
+      background-color: currentColor!important;
+      border-color: #000;
+    }
+    .options ul {
+      cursor: pointer;
+      margin: 0;
+      padding: 0;
+    }
+    .options li {
+      padding: .1em .5em;
+    }
+    .options li:hover {
+      background-color: #369;
+      color: #fff;
+    }
+    .options .redo li {
+      opacity: .4;
+    }
+    .options button {
+      margin: auto;
+      display: block;
+    }
+    .options li:before {
+      font-family: FontAwesome;
+      display: inline-block;
+      width: 1.4em;
+      height: 1.4em;
+      border-radius: .3em;
+      background-color: #369;
+      color: #fff;
+      padding: .2em;
+      text-align: center;
+      box-sizing: border-box;
+      margin-right: .3em;
+    }
+    .options li.addfeature:before {
+      content: "\f067";
+    }
+    .options li.modify:before {
+      content: "\f040";
+    }
+    .options li.translate:before {
+      content: "\f0b2";
+    }
+    .options li.rotate:before {
+      content: "\f01e";
+    }
+    .options li.scale:before {
+      content: "\f047";
+    }
+    .options li.delete:before {
+      content: "\f1f8";
+    }
+    .options li.split:before {
+      content: "\f0c4";
+    }
+    .options li.color:before {
+      content: "\f1fc";
+    }
+  </style>
+  
+  <!-- END for the drawing bottom for drawing rectangular, circle, and whatsoever-->
+  
+  
+  
+  <!--for the printing -->
+  <style>
+    #image {
+      background-color: #eee;
+      padding: 0.2em;
+      clear: both;
+      display: inline-block;
+      margin: 0.2em 0;
+	  position:left;
+    }
+  </style>
+   <!--end for the printing -->
+  
+  
+  
+  
+  
+   <!--layerscwitcher -->
+  <style>
+    
+    .hideOpacity .layerswitcher-opacity {
+      display:none;
+    }
+    .hideOpacity .ol-layerswitcher .layerup {
+      height: 2em;
+    }
+    .showPercent .layerSwitcher .ol-layerswitcher .layerswitcher-opacity-label {
+      display: block;
+    }
+
+    .ol-header > div {
+      width:100%; 
+    }
+    .toggleVisibility {
+      padding-left: 0.4em;
+      cursor: pointer;
+      border-bottom: 2px solid #369;
+      margin-bottom: 7em; 
+    }
+    .toggleVisibility:before {
+      background-color: #fff;
+      border: 1px solid #369;
+      box-sizing: border-box;
+      content: "";
+      display: block;
+      height: 50em;
+      left: 0.1em;
+      margin: 0;
+      position: absolute;
+      width: 22em;
+    }
+    .toggleVisibility.show:before {
+      background: #369;
+    }
+
+  </style>
+  <!--end for layerscwitcher -->
+  
+  
+  
+  
+  <!--This for the ol serach panel -->
+  <style>
+    .ol-search ul {
+      color: #333;
+      font-size:0.85em;
+      max-width: 90em;
+    }
+    .ol-search ul i {
+      display: block;
+      color: #333;
+      font-size:0.85em;
+    }
+    .info a img {
+      display: block;
+      height: -100px;
+      margin: -600em;
+	  
+    }
+  </style>
+  <!--end  for the ol serach panel -->
+  
+  
+  
+  
+  
+  
+</head>
+
+
+
+
+
+
+
+<body >
+  <a href="https://github.com/Viglino/ol-ext" class="right"><i></i></a>
+  
+
+  
+      <div class="grid-container">      
+	    <div class="header">
+		     <img src="resources/images/image.JFIF" alt="" style="width: inherit; height: inherit; vertical-align: middle;">
+			 
+			 <span style="vertical-align: right-middle;">PCRS Mayenne par Harry DJIKPO </span>
+			 
+			 
+			  
+		</div>
+  
+    
+
+  <!-- Map div  to set the dimention in width and height of your web page-->
+   <div id="map" style="width:1188px; height:790px;"></div>
+   
+   
+   <!-- measure, get info, pop up, get wms layers,legend, filter data --> 
+      <form id="measure">
+      <label>Measurement type &nbsp;</label>
+      <select id="measuretype">
+	    <option value="select">Select Measure option</option>
+        <option value="length">Length (LineString)</option>
+        <option value="area">Area (Polygon)</option>
+		<option value="clear">Clear Measurement</option>
+      </select>
+    </form>
+	<form id="getinfo">
+      <label>GetFeatureinfo&nbsp;</label>
+      <select id="getinfotype">
+	  <option value="select">Select option</option>
+	    <option value="activate_getinfo">Activate GetFeatureinfo</option>
+        <option value="deactivate_getinfo">Deactivate GetFeatureinfo</option>
+        </select>
+    </form>
+	<button onclick="wms_layers()" id = "wms_layers_btn">Available WMS Layers</button>
+	<button onclick="clear_all()" id = "clear_btn">Clear</button>
+
+	 </div>
+	 
+	 <div id="popup" class="ol-popup">
+      <a href="#" id="popup-closer" class="ol-popup-closer"></a>
+      <div id="popup-content"></div>
+    </div>
+	 <div id="info">&nbsp;</div>
+	 
+<div id="left">
+<div id="legend"></div>
+	 <ul class="nav nav-tabs">
+    <li class="active"><a data-toggle="tab" href="#form">Select by Attributes</a></li>
+        
+  </ul>
+	</div>
+
+	<div class="tab-content">
+	<div id="form" class="tab-pane fade in active">
+	<label for="layer">Select Layer</label>
+<select class="form-control" id="layer" name="layer">
+<option value="">Select Layer</option>
+</select>
+<br>
+<label for="attributes">Select attribute</label>
+<select class="form-control" id="attributes" name="attributes">
+<option value="">Select Attributes</option>
+</select>
+<br>
+<label for="operator">Select operator</label>
+<select class="form-control" id="operator" name="operator">
+<option value="">Select operator</option>
+</select>
+<br>
+
+<label for="value">Enter Value</label>
+<input type="text" class="form-control" id="value" name="value">
+<br>
+<button class="btn btn-success" onclick="query()">Load Query</button>
+</div>
+
+
+</div>
+<div id = "table_data"> </div>
+<div id="wms_layers_window" title="Available WMS Layers" style="display:none"></div>
+	 <table id="table_wms_layers" class = "table-bordered">
+     </table>
+   
+   
+  
+  
+   
+   
+<!-- end for measure, get info, pop up, get wms layers upload ,legend, filter data or attribute query-->   
+   
+   
+   
+   
+   
+   
+   
+   
+
+   
+   
+   
+  
+  <!-- the down ol screeen entitled  TE53 map overview-->
+  <div>
+    <div class="oview">
+      TE53 map overview
+      
+    </div>
+  </div>
+  
+ 
+    Layer: 
+    <select onchange="setOVLayer(this)">
+      <option value="0">OSM</option>
+      <option value="1" selected>Stamen</option>
+    </select>
+    <br />
+	 Position:
+    <select id="align" onchange="ov.setPosition(this.value)">
+	  <option value="bottom-right">bottom-right</option>
+      <option value="bottom-left">bottom-left</option>
+      <option value="top-left">top-left</option>
+      <option value="top-right">top-right</option>
+    </select>
+  </div> 
+  <!-- End of thr the down ol screeen entitled  TE53 map overview-->
+  
+  
+  
+   
+  
+  
+  
+  
+  <!-- for the tool for drawing circle, triangle and ect-->
+  <div class="options" >
+    <h2>Undo stack</h2>
+    <button onclick="undoInteraction.clear()">clear stack...</button>
+    <hr/>
+    <ul class="undo"></ul>
+    <hr/>
+    <ul class="redo"></ul>
+  </div>
+    <!-- End for the tool for drawing ircle, triangle and ect-->
+	
+	
+	 <!-- starting for the WMS one -->
+	<div class="options">
+    <ul>
+      <li>
+        url: 
+        <input id="url" type="text" value="https://ows.terrestris.de/osm/service" />
+        <button onclick="cap.showDialog($('#url').val())">search</button>
+      </li>
+      <li>
+        Services : 
+        <button onclick="cap.showDialog('https://ows.terrestris.de/osm/service'); ">terrestris wms image data</button>
+		
+		
+ 
+      </li>
+    </ul>
+    <button onclick="exportCarte()" style="display: none;">exportCarte</button>
+  </div>
+   <!-- end for the wms one-->
+   
+   
+  <!-- starting for the WMTS one -->
+    <ul>
+      <li>
+        url: 
+        <input id="url" type="text" value="https://wxs.ign.fr/cartes/geoportail/wmts" />
+        <button onclick="cap.showDialog($('#url').val())">search</button>
+      </li>
+      <li>
+        Services : 
+        <button onclick="cap.showDialog('https://wxs.ign.fr/cartes/geoportail/wmts'); ">Geoportail maps</button>
+        <button onclick="cap.showDialog('https://wxs.ign.fr/clc/geoportail/wmts'); ">CorineLandCover</button>
+      </li>
+    </ul>
+    <button onclick="exportCarte()" style="display: none;">exportCarte</button>
+  </div>
+  <!-- End of the WMTS one -->
+ 
+  
+  
+<!-- for the print one-->
+   <div class="options">
+    <h2>Options:</h2>
+    <ul><li>
+        <label><input id="file" type="checkbox" /> save as file</label>
+    </li></ul>
+    <a id="export-jpg" class="btn" download="map.jpg" target="_new" onclick="printControl.print({ imageType: 'image/jpeg'})">
+      Export JPEG
+    </a>
+    <a id="export-png" class="btn" download="map.png" target="_new" onclick="printControl.print({ imageType: 'image/png'})">
+      Export PNG
+    </a>
+    <a id="export-pdf" class="btn" download="map.pdf" data-margin="10" target="_new" onclick="printControl.print({ imageType: 'image/jpeg', pdf:true })">
+      Export PDF
+    </a>
+    
+  </div>
+  <!-- end for the print one-->
+    
+  
+  
+
+  
+  
+  
+  
+  
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <script type="text/javascript">
+
+var map, geojson, layer_name, layerSwitcher, featureOverlay; 
+    var container, content, closer;
+
+	  
+	  var container = document.getElementById('popup');
+      var content = document.getElementById('popup-content');
+      var closer = document.getElementById('popup-closer');
+
+
+      /**
+       * Create an overlay to anchor the popup to the map.
+       */
+      var overlay = new ol.Overlay({
+        element: container,
+        autoPan: true,
+        autoPanAnimation: {
+          duration: 250
+        }
+      });
+
+
+      /**
+       * Add a click handler to hide the popup.
+       * @return {boolean} Don't follow the href.
+       */
+      closer.onclick = function() {
+        overlay.setPosition(undefined);
+        closer.blur();
+        return false;
+      };
+
+
+
+
+ // 1- ajout des couches OSM et Water ainsi que les outils de dessins(polygone, cercle, triangle ect......) Vector layer
+ 
+    
+   // http services load on http
+  if (location.protocol === 'https:' && !/^localhost/.test(location.host)) {
+    location.href = window.location.href.replace(/^https:/,'http:');
+  }
+
+  // Define proj
+  proj4.defs("EPSG:3948","+proj=lcc +lat_1=49 +lat_2=44 +lat_0=46.5 +lon_0=3 +x_0=700000 +y_0=6600000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs");
+  if (ol.proj.proj4 && ol.proj.proj4.register) ol.proj.proj4.register(proj4);
+  
+  
+ //  a-Vector layer
+    var vector = new ol.layer.Vector( { 
+      source: new ol.source.Vector(),
+      style: function (f) {
+        return new ol.style.Style({
+          image: new ol.style.Circle({
+            radius: 5,
+            stroke: new ol.style.Stroke({ width: 1.5, color: f.get('color') || [255,128,0] }),
+            fill: new ol.style.Fill({ color: (f.get('color') || [255,128,0]).concat([.3]) })
+          }),
+          stroke: new ol.style.Stroke({ width: 2.5, color: f.get('color') || [255,128,0] }),
+          fill: new ol.style.Fill({ color: (f.get('color') || [255,128,0]).concat([.3]) })
+        })
+      }
+    })
+    
+    // b-The map
+	 
+    	var view = new ol.View({
+	projection: 'EPSG:4326',
+         center: [78.0,23.0],
+          zoom: 5,
+		  
+		  
+        });
+		
+		
+		
+		var base_maps = new ol.layer.Group({
+                'title': 'Base maps',
+                layers: [
+                        new ol.layer.Tile({
+                        title: 'OSM',
+                        type: 'base',
+                        visible: true,
+                        source: new ol.source.OSM()
+                    })
+                ]
+            });
+		   
+		var OSM = new ol.layer.Tile({
+            source: new ol.source.OSM(),
+			type: 'base',
+			title: 'OSM',
+          });
+		  
+		  
+		  var overlays = new ol.layer.Group({
+                'title': 'Overlays',
+                layers: [
+		 new ol.layer.Image({
+		  title: 'tasmania_roads',
+         // extent: [-180, -90, -180, 90],
+          source: new ol.source.ImageWMS({
+            url: 'http://localhost:8080/geoserver/wms',
+            params: {'LAYERS': 'topp:tasmania_roads'},
+            ratio: 1,
+            serverType: 'geoserver'
+          })
+        }),
+		new ol.layer.Image({
+		  title: 'dallage_l93',
+         // extent: [-180, -90, -180, 90],
+          source: new ol.source.ImageWMS({
+            url: 'http://localhost:8080/geoserver/wms',
+            params: {'LAYERS': 'my_first_projet_web1:dallage_l93'},
+            ratio: 1,
+            serverType: 'geoserver'
+          })
+        })
+		
+		]
+		});
+		 
+	  
+        var map = new ol.Map ({
+        target: 'map',
+        view: new ol.View ({
+          zoom: 14,
+          center: [270701, 6247637]
+        }),
+        layers: [
+          new ol.layer.Tile({ title:'OSM', source: new ol.source.OSM() }),
+		  new ol.layer.Tile({ title:'Waterolor', source: new ol.source.Stamen({ layer: 'watercolor' }) }),
+          vector
+        ]
+      });
+		  
+		  
+	  
+	  map.addLayer(base_maps);
+	  map.addLayer(overlays);
+	  
+	  var rainfall = new ol.layer.Image({
+		  title: 'dallage_l93',
+         // extent: [-180, -90, -180, 90],
+          source: new ol.source.ImageWMS({
+            url: 'http://localhost:8080/geoserver/wms',
+            params: {'LAYERS': 'my_first_projet_web1:dallage_l93'},
+            ratio: 1,
+            serverType: 'geoserver'
+          })
+        });
+		
+		overlays.getLayers().push(rainfall);
+		
+	  map.addControl(new ol.control.LayerSwitcher());
+      map.addControl(new ol.control.CanvasAttribution({ canvas: true }));
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+// add legend function and pop up or get info feature and many other things	  but the get info feature need to be repaired
+
+
+	  function legend () {
+		
+		$('#legend').empty();
+		
+		var no_layers = overlays.getLayers().get('length');
+	
+		var head = document.createElement("h4");
+		
+        var txt = document.createTextNode("Legend");
+		
+       head.appendChild(txt);
+	   var element = document.getElementById("legend");
+       element.appendChild(head);
+		var ar = [];
+		var i;
+		for (i = 0; i < no_layers; i++) {
+		ar.push("http://localhost:8080/geoserver/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=20&HEIGHT=20&LAYER="+overlays.getLayers().item(i).get('title'));
+		//alert(overlays.getLayers().item(i).get('title'));
+		}
+		for (i = 0; i < no_layers; i++) {
+		var head = document.createElement("p");
+		
+        var txt = document.createTextNode(overlays.getLayers().item(i).get('title'));
+		//alert(txt[i]);
+       head.appendChild(txt);
+	   var element = document.getElementById("legend");
+       element.appendChild(head);
+		 var img = new Image();
+       img.src = ar[i];
+      
+      var src = document.getElementById("legend");
+      src.appendChild(img);
+ 
+     }
+	 
+	 }
+	 
+	 legend();
+	 
+	 
+	function getinfo(evt) {
+		
+	
+	var coordinate = evt.coordinate;
+	        var viewResolution = /** @type {number} */ (view.getResolution());
+
+	//alert(coordinate1);
+	 $("#popup-content").empty();
+
+	 document.getElementById('info').innerHTML = '';
+	 var no_layers = overlays.getLayers().get('length');
+	// alert(no_layers);
+	 var url = new Array();
+	var wmsSource = new Array();
+	var layer_title = new Array();
+	
+	
+		var i;
+	 for (i = 0; i < no_layers; i++) {
+	//alert(overlays.getLayers().item(i).getVisible());
+	var visibility = overlays.getLayers().item(i).getVisible();
+	//alert(visibility);
+	if (visibility == true){
+	 //alert(i);
+	layer_title[i] = overlays.getLayers().item(i).get('title');
+	 //alert(layer_title[i]);
+	 wmsSource[i] = new ol.source.ImageWMS({
+        url: 'http://localhost:8080/geoserver/wms',
+        params: {'LAYERS': layer_title[i]},
+        serverType: 'geoserver',
+        crossOrigin: 'anonymous'
+      });
+	  //alert(wmsSource[i]);
+	  //var coordinate2 = evt.coordinate;
+		 // alert(coordinate);
+         url[i] = wmsSource[i].getFeatureInfoUrl(
+          evt.coordinate, viewResolution, 'EPSG:4326',
+          {'INFO_FORMAT': 'text/html'});
+		//  alert(url[i]);
+
+        			 //assuming you use jquery
+        $.get(url[i], function (data) {
+		//alert(i);
+            //append the returned html data
+           
+			
+			// $("#info").html(data);
+			 //document.getElementById('info').innerHTML = data;
+			//document.getElementById('popup-content').innerHTML = '<p>Feature Info</p><code>' + data + '</code>';
+			
+			//alert(dat[i]);
+			 $("#popup-content").append(data);
+			//document.getElementById('popup-content').innerHTML = '<p>Feature Info</p><code>' + data + '</code>';
+
+        overlay.setPosition(coordinate);
+		
+		layerSwitcher.renderPanel();
+		
+        });
+		//alert(layer_title[i]);
+		//alert(fid1[0]);
+		
+		
+		 
+			}
+	 }
+	
+       
+      }
+
+		
+		getinfotype.onchange = function() {
+		map.removeInteraction(draw);
+if (vectorLayer) {vectorLayer.getSource().clear();}
+map.removeOverlay(helpTooltip);
+		if (measureTooltipElement) {
+     var elem = document.getElementsByClassName("tooltip tooltip-static");
+	   
+    for(var i = elem.length-1; i >=0; i--)
+       {
+
+elem[i].remove();
+//alert(elem[i].innerHTML);
+       }     
+        }
+		
+		if (getinfotype.value == 'activate_getinfo'){
+  
+	  map.on('singleclick', getinfo);
+	   
+	   
+	  }
+	  else if (getinfotype.value == 'select' || getinfotype.value == 'deactivate_getinfo') {
+	  map.un('singleclick', getinfo);
+	overlay.setPosition(undefined);
+        closer.blur();
+	  }
+      };
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+		
+		// measure tool
+		
+		var source = new ol.source.Vector();
+	var vectorLayer = new ol.layer.Vector({
+	//title: 'layer',
+  source: source,
+style: new ol.style.Style({
+          fill: new ol.style.Fill({
+            color: 'rgba(255, 255, 255, 0.2)'
+          }),
+          stroke: new ol.style.Stroke({
+            color: '#ffcc33',
+            width: 2
+          }),
+          image: new ol.style.Circle({
+            radius: 7,
+            fill: new ol.style.Fill({
+              color: '#ffcc33'
+            })
+          })
+        })
+      });
+	
+	//overlays.getLayers().push(vectorLayer);
+	map.addLayer(vectorLayer);
+	
+	//layerSwitcher.renderPanel();
+	
+		
+		/**
+       * Currently drawn feature.
+       * @type {module:ol/Feature~Feature}
+       */
+      var sketch;
+
+
+      /**
+       * The help tooltip element.
+       * @type {Element}
+       */
+      var helpTooltipElement;
+
+
+      /**
+       * Overlay to show the help messages.
+       * @type {module:ol/Overlay}
+       */
+      var helpTooltip;
+
+
+      /**
+       * The measure tooltip element.
+       * @type {Element}
+       */
+      var measureTooltipElement;
+
+
+      /**
+       * Overlay to show the measurement.
+       * @type {module:ol/Overlay}
+       */
+      var measureTooltip;
+
+
+      /**
+       * Message to show when the user is drawing a polygon.
+       * @type {string}
+       */
+      var continuePolygonMsg = 'Click to continue drawing the polygon';
+
+
+      /**
+       * Message to show when the user is drawing a line.
+       * @type {string}
+       */
+      var continueLineMsg = 'Click to continue drawing the line';
+
+
+      /**
+       * Handle pointer move.
+       * @param {module:ol/MapBrowserEvent~MapBrowserEvent} evt The event.
+       */
+      var pointerMoveHandler = function(evt) {
+        if (evt.dragging) {
+          return;
+        }
+        /** @type {string} */
+        var helpMsg = 'Click to start drawing';
+
+        if (sketch) {
+          var geom = (sketch.getGeometry());
+          if (geom instanceof ol.geom.Polygon) {
+		 
+            helpMsg = continuePolygonMsg;
+          } else if (geom instanceof ol.geom.LineString) {
+            helpMsg = continueLineMsg;
+          }
+        }
+
+        helpTooltipElement.innerHTML = helpMsg;
+        helpTooltip.setPosition(evt.coordinate);
+
+        helpTooltipElement.classList.remove('hidden');
+      };
+	  
+	   map.on('pointermove', pointerMoveHandler);
+
+      map.getViewport().addEventListener('mouseout', function() {
+        helpTooltipElement.classList.add('hidden');
+      });
+
+      //var measuretype = document.getElementById('measuretype');
+
+      var draw; // global so we can remove it later
+
+
+      /**
+       * Format length output.
+       * @param {module:ol/geom/LineString~LineString} line The line.
+       * @return {string} The formatted length.
+       */
+      var formatLength = function(line) {
+	  var length = ol.sphere.getLength(line,{projection:'EPSG:4326'});
+        //var length = getLength(line);
+		//var length = line.getLength({projection:'EPSG:4326'});
+		
+        var output;
+        if (length > 100) {
+          output = (Math.round(length / 1000 * 100) / 100) +
+              ' ' + 'km';
+			  
+        } else {
+          output = (Math.round(length * 100) / 100) +
+              ' ' + 'm';
+			  
+        }
+        return output;
+		
+      };
+
+
+      /**
+       * Format area output.
+       * @param {module:ol/geom/Polygon~Polygon} polygon The polygon.
+       * @return {string}// Formatted area.
+       */
+      var formatArea = function(polygon) {
+	 // var area = getArea(polygon);
+	 var area = ol.sphere.getArea(polygon, {projection:'EPSG:4326'});
+       // var area = polygon.getArea();
+		//alert(area);
+		var output;
+        if (area > 10000) {
+          output = (Math.round(area / 1000000 * 100) / 100) +
+              ' ' + 'km<sup>2</sup>';
+        } else {
+          output = (Math.round(area * 100) / 100) +
+              ' ' + 'm<sup>2</sup>';
+        }
+        return output;
+      };
+
+      function addInteraction() {
+
+	 var type;
+	 if (measuretype.value == 'area')
+	 { type = 'Polygon'; }
+	 else if (measuretype.value == 'length')
+	 {type = 'LineString';}
+	 //alert(type);
+	 
+        //var type = (measuretype.value == 'area' ? 'Polygon' : 'LineString');
+        draw = new ol.interaction.Draw({
+          source: source,
+          type: type,
+          style: new ol.style.Style({
+            fill: new ol.style.Fill({
+              color: 'rgba(255, 255, 255, 0.5)'
+            }),
+            stroke: new ol.style.Stroke({
+              color: 'rgba(0, 0, 0, 0.5)',
+              lineDash: [10, 10],
+              width: 2
+            }),
+            image: new ol.style.Circle({
+              radius: 5,
+              stroke: new ol.style.Stroke({
+                color: 'rgba(0, 0, 0, 0.7)'
+              }),
+              fill: new ol.style.Fill({
+                color: 'rgba(255, 255, 255, 0.5)'
+              })
+            })
+          })
+        });
+        
+if (measuretype.value == 'select' || measuretype.value == 'clear')
+{
+
+map.removeInteraction(draw);
+if (vectorLayer) {vectorLayer.getSource().clear();}
+map.removeOverlay(helpTooltip);
+
+if (measureTooltipElement) {
+     var elem = document.getElementsByClassName("tooltip tooltip-static");
+//$('#measure_tool').empty(); 
+
+//alert(elem.length);
+for(var i = elem.length-1; i >=0; i--)
+{
+
+elem[i].remove();
+//alert(elem[i].innerHTML);
+}     
+        }
+
+//var elem1 = elem[0].innerHTML;
+//alert(elem1);
+
+}
+
+else if (measuretype.value == 'area' || measuretype.value == 'length')
+{
+
+map.addInteraction(draw);
+        createMeasureTooltip();
+        createHelpTooltip();
+
+        var listener;
+        draw.on('drawstart',
+          function(evt) {
+            // set sketch
+			
+		
+			//vectorLayer.getSource().clear();
+			
+            sketch = evt.feature;
+
+            /** @type {module:ol/coordinate~Coordinate|undefined} */
+            var tooltipCoord = evt.coordinate;
+
+            listener = sketch.getGeometry().on('change', function(evt) {
+              var geom = evt.target;
+			  
+              var output;
+              if (geom instanceof ol.geom.Polygon) {
+			  
+                output = formatArea(geom);
+                tooltipCoord = geom.getInteriorPoint().getCoordinates();
+				
+              } else if (geom instanceof ol.geom.LineString) {
+			  
+                output = formatLength(geom);
+                tooltipCoord = geom.getLastCoordinate();
+              }
+              measureTooltipElement.innerHTML = output;
+              measureTooltip.setPosition(tooltipCoord);
+            });
+          }, this);
+
+        draw.on('drawend',
+          function() {
+            measureTooltipElement.className = 'tooltip tooltip-static';
+            measureTooltip.setOffset([0, -7]);
+            // unset sketch
+            sketch = null;
+            // unset tooltip so that a new one can be created
+            measureTooltipElement = null;
+            createMeasureTooltip();
+            ol.Observable.unByKey(listener);
+          }, this);
+		  
+		  }
+      }
+
+
+      /**
+       * Creates a new help tooltip
+       */
+      function createHelpTooltip() {
+        if (helpTooltipElement) {
+          helpTooltipElement.parentNode.removeChild(helpTooltipElement);
+        }
+        helpTooltipElement = document.createElement('div');
+        helpTooltipElement.className = 'tooltip hidden';
+        helpTooltip = new ol.Overlay({
+          element: helpTooltipElement,
+          offset: [15, 0],
+          positioning: 'center-left'
+        });
+        map.addOverlay(helpTooltip);
+      }
+
+
+      /**
+       * Creates a new measure tooltip
+       */
+      function createMeasureTooltip() {
+        if (measureTooltipElement) {
+          measureTooltipElement.parentNode.removeChild(measureTooltipElement);
+        }
+        measureTooltipElement = document.createElement('div');
+        measureTooltipElement.className = 'tooltip tooltip-measure';
+		 
+        measureTooltip = new ol.Overlay({
+          element: measureTooltipElement,
+          offset: [0, -15],
+          positioning: 'bottom-center'
+        });
+        map.addOverlay(measureTooltip);
+		
+      }
+
+
+      /**
+       * Let user change the geometry type.
+       */
+     measuretype.onchange = function() {
+	   map.un('singleclick', getinfo);
+	overlay.setPosition(undefined);
+        closer.blur();
+     map.removeInteraction(draw);
+        addInteraction();
+      };
+	 
+	 
+	 
+// end of adding legend function and pop up or get info feature and many other things	 	 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	  
+// add on wms_layers_window
+	  
+	  function wms_layers()
+{
+//alert('jdgf');
+
+$(function() {
+  
+       $( "#wms_layers_window" ).dialog({
+          height: 400,
+		  width: 800,
+          modal: true
+        });
+$( "#wms_layers_window" ).show();
+   
+ });
+ 
+    $(document).ready(function(){
+           $.ajax({
+               type: "GET",
+               url: "http://localhost:8080/geoserver/wms?request=getCapabilities",
+               dataType: "xml",
+               success: function(xml){
+			$('#table_wms_layers').empty();
+                 console.log("here");
+				$('<tr></tr>').html('<th>Name</th><th>Title</th><th>Abstract</th>').appendTo('#table_wms_layers');
+                   $(xml).find('Layer').find('Layer').each(function(){
+                       var name = $(this).children('Name').text();
+					 // alert(name);
+					//var name1 = name.find('Name').text();
+					//alert(name);
+                       var title = $(this).children('Title').text();
+					   
+                       var abst = $(this).children('Abstract').text();
+					//   alert(abst);
+					 
+
+					//   alert('test');
+					    $('<tr></tr>').html('<td>' +name+ '</td><td>' +title+ '</td><td>' +abst+ '</td>').appendTo('#table_wms_layers');
+						
+					  
+                   });
+				   addRowHandlers();
+               }
+           });
+   });
+	  
+	  
+var divContainer = document.getElementById("wms_layers_window");
+					   var table1 = document.getElementById("table_wms_layers");
+        divContainer.innerHTML = "";
+        divContainer.appendChild(table1);
+		$( "#wms_layers_window" ).show();
+		
+		var add_map_btn = document.createElement("BUTTON");
+        add_map_btn.setAttribute("id", "add_map_btn");
+		add_map_btn.innerHTML = "Add Layer to Map";
+		add_map_btn.setAttribute("onclick", "add_layer()");
+		divContainer.appendChild(add_map_btn);
+	
+
+function addRowHandlers() {
+//alert('knd');
+    var rows = document.getElementById("table_wms_layers").rows;
+	  var table = document.getElementById('table_wms_layers');
+	var heads = table.getElementsByTagName('th');
+	var col_no;
+	for (var i = 0; i < heads.length; i++) {
+        // Take each cell
+        var head = heads[i];
+		//alert(head.innerHTML);
+		if (head.innerHTML == 'Name') 
+		{
+		col_no = i+1; 
+		//alert(col_no);
+		}
+
+		}
+    for (i = 0; i < rows.length; i++) {
+	
+        rows[i].onclick = function(){ return function(){
+		
+		$(function() {
+        $("#table_wms_layers td").each(function() {
+   	   $(this).parent("tr").css("background-color", "white");
+       });
+       });
+              var cell = this.cells[col_no-1];
+               layer_name = cell.innerHTML;
+			  // alert(layer_name);
+			   
+			   	$(document).ready(function () {
+    $("#table_wms_layers td:nth-child("+col_no+")").each(function () {
+        if ($(this).text() == layer_name) {
+            $(this).parent("tr").css("background-color", "grey");
+			
+			
+			
+        }
+    });
+});
+
+               //alert("id:" + id);
+        };}(rows[i]);
+    }
+	 /*$("#add_map_btn").click(function () {
+       // var value = $(".selected td:first").html();
+       // value = value || "No row Selected";
+        alert(layer_name);
+    });*/
+}
+
+}
+
+function add_layer()
+            {
+			//alert("jd"); 
+			
+//alert(layer_name);
+//map.removeControl(layerSwitcher);
+
+var name = layer_name.split(":");
+						
+			var layer_wms = new ol.layer.Image({
+		  title: name[1],
+         // extent: [-180, -90, -180, 90],
+          source: new ol.source.ImageWMS({
+            url: 'http://localhost:8080/geoserver/wms',
+            params: {'LAYERS': layer_name},
+            ratio: 1,
+            serverType: 'geoserver'
+          })
+        });
+		overlays.getLayers().push(layer_wms);
+			
+		var url = 'http://localhost:8080/geoserver/wms?request=getCapabilities';
+    var parser = new ol.format.WMSCapabilities();
+
+
+    $.ajax(url).then(function (response) {
+        //window.alert("word");
+        var result = parser.read(response);
+       // console.log(result);
+       // window.alert(result);
+        var Layers = result.Capability.Layer.Layer;
+        var extent;
+        for (var i = 0, len = Layers.length; i < len; i++) {
+
+            var layerobj = Layers[i];
+          //  window.alert(layerobj.Name);
+
+            if (layerobj.Name == layer_name)
+            {
+                extent = layerobj.BoundingBox[0].extent;
+				//alert(extent);
+				 map.getView().fit(
+            extent,
+        { duration: 1590, size: map.getSize() }
+    );
+				
+            }
+        }
+    });
+		//alert(layer_wms.get('source').get('extent'));
+		/*layer_wms.getSource().on('singleclick', function(){
+    map.getView().fit(
+        layer_wms.getExtent(),
+        { duration: 1590, size: map.getSize() }
+    );
+ });*/
+		
+		layerSwitcher.renderPanel();
+		//map.addControl(layerSwitcher);
+		legend();
+		//map.addLayer(layer_wms);
+			}
+	 	
+// layers_name
+		 	$(document).ready(function(){
+			$.ajax({
+				type: "GET",
+				url: "http://localhost:8080/geoserver/wfs?request=getCapabilities",
+				dataType: "xml",
+				success: function(xml) {
+					var select = $('#layer');
+					$(xml).find('FeatureType').each(function(){
+						//var title = $(this).find('ows:Operation').attr('name');
+						//alert(title);
+						var name = $(this).find('Name').text();
+						//select.append("<option/><option class='ddheader' value='"+ name +"'>"+title+"</option>");
+							$(this).find('Name').each(function(){
+							var value = $(this).text();
+							select.append("<option class='ddindent' value='"+ value +"'>"+value+"</option>");
+						});
+					});
+					//select.children(":first").text("please make a selection").attr("selected",true);
+				}
+			});
+		});
+		
+		// attributes_dropdown
+
+$(function () {
+	$("#layer" ).change(function () {
+	
+		var attributes = document.getElementById("attributes");
+var length = attributes.options.length;
+for (i = length-1; i >= 0; i--) {
+  attributes.options[i] = null;
+}
+	
+	  var value_layer = $(this).val();
+	 
+		
+attributes.options[0] = new Option('Select attributes', "");
+		//  alert(url);
+		
+			$(document).ready(function(){
+			$.ajax({
+				type: "GET",
+				url: "http://localhost:8080/geoserver/wfs?service=WFS&request=DescribeFeatureType&version=1.1.0&typeName="+value_layer,
+				dataType: "xml",
+				success: function(xml) {
+				
+				var select = $('#attributes');
+				//var title = $(xml).find('xsd\\:complexType').attr('name');
+			//	alert(title);
+				$(xml).find('xsd\\:sequence').each(function(){
+				
+				$(this).find('xsd\\:element').each(function(){
+				var value = $(this).attr('name');
+				//alert(value);
+				var type = $(this).attr('type');
+				//alert(type);
+				if (value != 'geom' && value != 'the_geom') {
+				select.append("<option class='ddindent' value='"+ type +"'>"+value+"</option>");
+				}
+				});
+				
+				});
+				}
+			});
+		});
+	
+	
+});
+});
+
+
+// operator combo
+$(function () {
+	$("#attributes" ).change(function () {
+	
+		var operator = document.getElementById("operator");
+var length = operator.options.length;
+for (i = length-1; i >= 0; i--) {
+  operator.options[i] = null;
+}
+	
+	  var value_type = $(this).val();
+	 // alert(value_type);
+	  var value_attribute = $('#attributes option:selected').text();
+operator.options[0] = new Option('Select operator', "");
+
+	  if (value_type == 'xsd:short' || value_type == 'xsd:int' || value_type == 'xsd:double')
+			{
+			var operator1 = document.getElementById("operator");
+			operator1.options[1] = new Option('Greater than', '>');
+			operator1.options[2] = new Option('Less than', '<');
+			operator1.options[3] = new Option('Equal to', '=');
+			}
+			else if (value_type == 'xsd:string')
+			{
+			var operator1 = document.getElementById("operator");
+			operator1.options[1] = new Option('Like', 'ILike');
+			
+			}
+
+});
+});
+
+	 var highlightStyle = new ol.style.Style({
+  fill: new ol.style.Fill({
+    color: 'rgba(255,255,255,0.7)',
+  }),
+  stroke: new ol.style.Stroke({
+    color: '#3399CC',
+    width: 3,
+  }),
+ image: new ol.style.Circle({
+            radius: 10,
+            fill: new ol.style.Fill({
+              color: '#3399CC'
+            })
+          })
+});
+
+ featureOverlay = new ol.layer.Vector({
+        source: new ol.source.Vector(),
+        map: map,
+		style: highlightStyle
+      });
+		
+		
+		function findRowNumber(cn1, v1){
+
+  var table = document.querySelector('#table');
+  var rows = table.querySelectorAll("tr");
+  var msg = "No such row exist"
+  for(i=1;i<rows.length;i++){
+    var tableData = rows[i].querySelectorAll("td");
+    if(tableData[cn1-1].textContent==v1){
+      msg = i;
+      break;
+    }
+  }
+  return msg;
+}
+
+
+function addRowHandlers() {
+    var rows = document.getElementById("table").rows;
+	var heads = table.getElementsByTagName('th');
+	var col_no;
+	for (var i = 0; i < heads.length; i++) {
+        // Take each cell
+        var head = heads[i];
+		//alert(head.innerHTML);
+		if (head.innerHTML == 'id') 
+		{
+		col_no = i+1; 
+		//alert(col_no);
+		}
+
+		}
+    for (i = 0; i < rows.length; i++) {
+	
+	 	
+	
+        rows[i].onclick = function(){ return function(){
+		featureOverlay.getSource().clear();
+		
+		$(function() {
+        $("#table td").each(function() {
+   	   $(this).parent("tr").css("background-color", "white");
+       });
+       });
+              var cell = this.cells[col_no-1];
+               var id = cell.innerHTML;
+			   
+			   
+			   	$(document).ready(function () {
+    $("#table td:nth-child("+col_no+")").each(function () {
+        if ($(this).text() == id) {
+            $(this).parent("tr").css("background-color", "grey");
+        }
+    });
+});
+
+var features = geojson.getSource().getFeatures();
+//alert(features.length);
+
+
+for (i=0; i< features.length; i++)
+{
+
+
+
+if (features[i].getId() == id)
+{
+featureOverlay.getSource().addFeature(features[i]);
+
+		featureOverlay.getSource().on('addfeature', function(){
+    map.getView().fit(
+        featureOverlay.getSource().getExtent(),
+        { duration: 1590, size: map.getSize() }
+    );
+ });
+  
+}
+}
+
+               //alert("id:" + id);
+        };}(rows[i]);
+    }
+}
+
+
+		
+		function  highlight(evt) {
+		featureOverlay.getSource().clear();
+    var feature = map.forEachFeatureAtPixel(evt.pixel,
+      function(feature, layer) {
+        return feature;
+      });
+	  
+    if (feature) {
+	
+        var geometry = feature.getGeometry();
+        var coord = geometry.getCoordinates();
+		var coordinate = evt.coordinate;
+		   
+	   $(function() {
+        $("#table td").each(function() {
+   	   $(this).parent("tr").css("background-color", "white");
+       });
+       });
+		  
+        featureOverlay.getSource().addFeature(feature);
+    }
+	
+
+
+var table = document.getElementById('table');
+    var cells = table.getElementsByTagName('td');
+	var rows = document.getElementById("table").rows;
+	var heads = table.getElementsByTagName('th');
+	var col_no;
+	for (var i = 0; i < heads.length; i++) {
+        // Take each cell
+        var head = heads[i];
+		//alert(head.innerHTML);
+		if (head.innerHTML == 'id') 
+		{
+		col_no = i+1; 
+		//alert(col_no);
+		}
+
+		}
+		var row_no = findRowNumber(col_no, feature.getId());
+		//alert(row_no);
+		
+		var rows = document.querySelectorAll('#table tr');
+
+rows[row_no].scrollIntoView({
+    behavior: 'smooth',
+    block: 'center'
+});
+
+			$(document).ready(function () {
+    $("#table td:nth-child("+col_no+")").each(function () {
+	
+        if ($(this).text() == feature.getId()) {
+            $(this).parent("tr").css("background-color", "grey");
+			
+        }
+    });
+});
+
+
+
+
+	};	
+	
+function query(){
+
+$('#table').empty();
+if(geojson)
+		{
+		map.removeLayer(geojson);
+		
+		}
+		
+		if(featureOverlay)
+		{
+		featureOverlay.getSource().clear();
+		map.removeLayer(featureOverlay);
+		
+		}
+	//alert('jsbchdb');	
+var layer = document.getElementById("layer");
+var value_layer = layer.options[layer.selectedIndex].value;
+//alert(value_layer);
+
+var attribute = document.getElementById("attributes");
+var value_attribute = attribute.options[attribute.selectedIndex].text;
+//alert(value_attribute);
+
+var operator = document.getElementById("operator");
+var value_operator = operator.options[operator.selectedIndex].value;
+//alert(value_operator);
+
+var txt = document.getElementById("value");
+var value_txt = txt.value;
+
+if (value_operator == 'ILike')
+			{
+			value_txt = ""+value_txt+"%25";
+			//alert(value_txt);
+			//value_attribute = 'strToLowerCase('+value_attribute+')';
+			}
+			else{
+			value_txt = value_txt;
+			//value_attribute = value_attribute;
+			}
+//alert(value_txt);
+
+
+ var url = "http://localhost:8080/geoserver/ows?service=WFS&version=1.0.0&request=GetFeature&typeName="+value_layer+"&CQL_FILTER="+value_attribute+"+"+value_operator+"+'"+value_txt+"'&outputFormat=application/json"
+//alert(url);
+
+var style = new ol.style.Style({
+          fill: new ol.style.Fill({
+            color: 'rgba(255, 255, 255, 0.7)'
+          }),
+          stroke: new ol.style.Stroke({
+            color: '#ffcc33',
+            width: 3
+          }),
+		 /* image: new ol.style.Icon({
+    anchor: [0.5, 46],
+    anchorXUnits: 'fraction',
+    anchorYUnits: 'pixels',
+    src: 'img/marker.png',
+  }),*/
+          image: new ol.style.Circle({
+            radius: 7,
+            fill: new ol.style.Fill({
+              color: '#ffcc33'
+            })
+          })
+        });
+		
+	
+
+     geojson = new ol.layer.Vector({
+      //title:'dfdfd',
+	 //title: '<h5>' + value_crop+' '+ value_param +' '+ value_seas+' '+value_level+'</h5>',
+          source: new ol.source.Vector({
+		 url: url,
+          format: new ol.format.GeoJSON()
+          }),
+		  style: style,
+     
+        });
+		
+		geojson.getSource().on('addfeature', function(){
+		//alert(geojson.getSource().getExtent());
+    map.getView().fit(
+        geojson.getSource().getExtent(),
+        { duration: 1590, size: map.getSize() }
+    );
+ });
+ 
+ //overlays.getLayers().push(geojson);
+		map.addLayer(geojson);
+		
+	
+		$.getJSON(url, function(data) {
+	 var col = [];
+	 col.push('id');
+        for (var i = 0; i < data.features.length; i++) {
+		
+            for (var key in data.features[i].properties) {
+			
+                if (col.indexOf(key) === -1) {
+                    col.push(key);
+                }
+            }
+        }
+		
+		
+	
+	  var table = document.createElement("table");
+	  
+	  
+table.setAttribute("class", "table table-bordered");
+table.setAttribute("id", "table");
+        // CREATE HTML TABLE HEADER ROW USING THE EXTRACTED HEADERS ABOVE.
+
+        var tr = table.insertRow(-1);                   // TABLE ROW.
+
+        for (var i = 0; i < col.length; i++) {
+            var th = document.createElement("th");      // TABLE HEADER.
+            th.innerHTML = col[i];
+            tr.appendChild(th);
+        }
+
+        // ADD JSON DATA TO THE TABLE AS ROWS.
+        for (var i = 0; i < data.features.length; i++) {
+
+            tr = table.insertRow(-1);
+
+            for (var j = 0; j < col.length; j++) {
+                var tabCell = tr.insertCell(-1);
+				if (j == 0) {tabCell.innerHTML = data.features[i]['id'];}
+				else{
+				//alert(data.features[i]['id']);
+                tabCell.innerHTML = data.features[i].properties[col[j]];
+				//alert(tabCell.innerHTML);
+				}
+            }
+        }
+		
+		  
+
+        // FINALLY ADD THE NEWLY CREATED TABLE WITH JSON DATA TO A CONTAINER.
+        var divContainer = document.getElementById("table_data");
+        divContainer.innerHTML = "";
+        divContainer.appendChild(table);
+		addRowHandlers();
+		
+   document.getElementById('map').style.height='75%';
+    document.getElementById('table_data').style.height='25%';
+	map.updateSize();
+});
+	
+	
+	map.on('click', highlight);
+	
+addRowHandlers();
+
+}
+
+	function clear_all()
+		{
+		document.getElementById('map').style.height='100%';
+    document.getElementById('table_data').style.height='0%';
+	map.updateSize();
+	$('#table').empty();
+	//$('#table1').empty();
+	if (geojson) {geojson.getSource().clear(); map.removeLayer(geojson);}
+	if (featureOverlay) {featureOverlay.getSource().clear(); map.removeLayer(featureOverlay);}
+		map.removeInteraction(draw);
+if (vectorLayer) {vectorLayer.getSource().clear();}
+map.removeOverlay(helpTooltip);
+		if (measureTooltipElement) {
+     var elem = document.getElementsByClassName("tooltip tooltip-static");
+	   
+    for(var i = elem.length-1; i >=0; i--)
+       {
+
+elem[i].remove();
+//alert(elem[i].innerHTML);
+       }     
+        }
+		map.un('singleclick', getinfo);
+	overlay.setPosition(undefined);
+        closer.blur();
+		
+map.un('click', highlight);
+
+	
+		}
+	 
+	 
+// end of    add on wms_layers_window
+
+
+
+
+
+
+
+
+	
+
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+
+	  
+
+    // c-Main control bar
+    var mainbar = new ol.control.Bar();
+    map.addControl(mainbar);
+
+    // d-Editbar
+    var editbar = new ol.control.EditBar ({
+      source: vector.getSource(),
+      interactions: { Info: false }
+    });
+    mainbar.addControl(editbar);
+
+    // e-Add a fill interaction to set color attribute
+    var fill = new ol.interaction.FillAttribute({ name: 'fill color' }, { color: [255,0,0] });
+    editbar.addControl(new ol.control.Toggle({
+      html: '<i class="fa fa-paint-brush"></i>',
+      title: 'fill color attribut',
+      interaction: fill,
+      bar: new ol.control.Bar({
+        controls:[ 
+          new ol.control.Button({
+            className: 'red',
+            handleClick: function(){
+              fill.setAttribute('color', [255,0,0])
+            }
+          }),
+          new ol.control.Button({
+            className: 'green',
+            handleClick: function(){
+              fill.setAttribute('color', [0,255,0])
+            }
+		  }),
+		  new ol.control.Button({
+            className: '#860404 ',
+            handleClick: function(){
+              fill.setAttribute('color', [134,4,4])
+            }
+		  }),
+		  new ol.control.Button({
+            className: 'black',
+            handleClick: function(){
+              fill.setAttribute('color', [16,4,4])
+            }
+		  }),
+		  new ol.control.Button({
+            className: '#ff7f7f',
+            handleClick: function(){
+              fill.setAttribute('color', [255,127,127])
+            }
+		  }),
+		  new ol.control.Button({
+            className: '#ff7fea',
+            handleClick: function(){
+              fill.setAttribute('color', [255,127,234])
+            }
+          }),
+          new ol.control.Button({
+            className: 'blue',
+            handleClick: function(){
+              fill.setAttribute('color', [0,0,255])
+            }
+          })
+        ]
+      })
+    }));
+
+    // f-Undo redo interaction
+    var undoInteraction = new ol.interaction.UndoRedo();
+    map.addInteraction(undoInteraction);
+    // g-Prevent selection of a deleted feature
+    undoInteraction.on('undo', function(e) {
+      if (e.action.type === 'addfeature') {
+        editbar.getInteraction('Select').getFeatures().clear();
+        editbar.getInteraction('Transform').select();
+      }
+    });
+
+    // h-Handle undo/redo stack
+    undoInteraction.on('stack:add', function (e) {
+      // i-New action element
+      if (!e.action.element) {
+        var elt = e.action.element = $('<li>').text(e.action.name || e.action.type)
+        elt.addClass(e.action.name || e.action.type);
+        elt.click(function() {
+          // j-undo or redo stack
+          if (elt.parent().hasClass('undo')) {
+            undoInteraction.undo();
+          } else {
+            undoInteraction.redo();
+          }
+        })
+      }
+      // k-Append to undo stack
+      $('.options .undo').append(e.action.element);
+      e.action.element.attr('title', 'undo');
+      if (!undoInteraction.hasRedo()) $('.options .redo').html('');
+      console.log(undoInteraction.length()+' undo | '+undoInteraction.length('redo')+' redo')
+    });
+    // l-Append to redo stack
+    undoInteraction.on('stack:remove', function (e) {
+      if (e.shift) {
+        $('.options .undo li').first().remove();
+      } else {
+        $('.options .redo').prepend($('.options .undo li').last());
+      }
+      e.action.element.attr('title', 'redo');
+      console.log(undoInteraction.length()+' undo | '+undoInteraction.length('redo')+' redo')
+    });
+    // n-Clear stack
+    undoInteraction.on('stack:clear', function (e) {
+      $('.options .undo').html('');
+      $('.options .redo').html('');
+      console.log(undoInteraction.length()+' undo | '+undoInteraction.length('redo')+' redo')
+    });
+
+    // m-Add buttons to the bar
+    var bar = new ol.control.Bar({ 
+      group: true,
+      controls: [
+        new ol.control.Button({
+          html: '<i class="fa fa-undo" ></i>',
+          title: 'undo...',
+          handleClick: function() {
+            undoInteraction.undo();
+          }
+        }),
+        new ol.control.Button({
+          html: '<i class="fa fa-repeat" ></i>',
+          title: 'redo...',
+          handleClick: function() {
+            undoInteraction.redo();
+          }
+        })
+      ]
+    });
+    mainbar.addControl(bar);
+
+    // o-Add a snap
+    map.addInteraction(new ol.interaction.Snap({ 
+      source: vector.getSource() 
+    }));
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	// 2- ajout de quelques couches à la bar de couche et une couche xyz tile 
+	var PCRS_MAYENNE2 = new ol.layer.Tile({
+        title: "tasmania_roads",
+        source: new ol.source.TileWMS({
+            url: 'http://localhost:8080/geoserver/topp/wms',
+            params: { 'LAYERS': 'topp:tasmania_roads', 'TILED': true },
+            serverType: 'geoserver',
+            visible: true
+        })
+    });
+	map.addLayer(PCRS_MAYENNE2)
+	
+	
+	
+	
+	
+var imagery = new ol.layer.Group({
+    'title': 'imagery',
+    layers: [
+        new ol.layer.Tile({
+            title: 'OSM',
+            type: 'base',
+            visible: true,
+            source: new ol.source.OSM()
+        }),
+
+        new ol.layer.Tile({
+            title: 'Satellite',
+            type: 'base',
+            visible: true,
+            source: new ol.source.XYZ({
+                attributions: ['Powered by Esri',
+                    'Source: Esri, DigitalGlobe, GeoEye, Earthstar Geographics, CNES/Airbus DS, USDA, USGS, AeroGRID, IGN, and the GIS User Community'
+                ],
+                attributionsCollapsible: false,
+                url: 'https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+                maxZoom: 23
+            })
+        })
+    ]
+});
+map.addLayer(imagery);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  	
+	
+	
+	
+	
+	
+	
+	
+	
+// 3-The starting of the printing functionnality
+    map.addControl(new ol.control.CanvasTitle({ 
+      title: 'my title', 
+      visible: false,
+      style: new ol.style.Style({ text: new ol.style.Text({ font: '20px "Lucida Grande",Verdana,Geneva,Lucida,Arial,Helvetica,sans-serif'}) })
+      }));
+	  
+	  
+	  
+// a-Legend
+var legend = new ol.legend.Legend({ 
+  title: 'Legend', 
+  margin: 5,
+  items: [{
+    title: 'Church', 
+    typeGeom: 'Point', 
+    style: new ol.style.Style({ 
+      image: new ol.style.Icon({ 
+      src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/Eglise_icone_2.svg/30px-Eglise_icone_2.svg.png',
+      crossOrigin: 'anonymous' // Enable print
+    })})
+  }, { 
+    title: 'Photo', 
+    typeGeom: 'Point', 
+    style: new ol.style.Style({ 
+      image: new ol.style.Icon({ 
+      src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Icone_appareil_photo.svg/30px-Icone_appareil_photo.svg.png',
+      crossOrigin: 'anonymous' // Enable print
+    })})
+  }, {
+    title: 'Line', typeGeom: 'LineString', style: ol.style.Style.defaultStyle() 
+  }, {
+    title: 'Polygon', typeGeom: 'Polygon', style: ol.style.Style.defaultStyle() 
+  }]
+});
+
+
+
+
+// b-Print control
+var printControl = new ol.control.PrintDialog();
+printControl.setSize('A4');
+map.addControl(printControl);
+
+/* On print > save image file */
+printControl.on(['print', 'error'], function(e) {
+  // Print success
+  if (e.image) {
+    if (e.pdf) {
+      // c-Export pdf using the print info
+      var pdf = new jsPDF({
+        orientation: e.print.orientation,
+        unit: e.print.unit,
+        format: e.print.size
+      });
+      pdf.addImage(e.image, 'JPEG', e.print.position[0], e.print.position[0], e.print.imageWidth, e.print.imageHeight);
+      pdf.save(e.print.legend ? 'legend.pdf' : 'map.pdf');
+    } else  {
+      // d-Save image as file
+      e.canvas.toBlob(function(blob) {
+        var name = (e.print.legend ? 'legend.' : 'map.')+e.imageType.replace('image/','');
+        saveAs(blob, name);
+      }, e.imageType, e.quality);
+    }
+  } else {
+    console.warn('No canvas to export');
+  }
+});
+// The end  of the printing functionnality
+
+
+
+
+// 4-The start of the searching area side 
+  var search = new ol.control.SearchBAN({
+    //target: $(".options").get(0),
+    reverse:true,
+    position: true	// Search, with priority to geo position
+  });
+  map.addControl (search);
+
+  // Select feature when click on the reference index
+  search.on('select', function(e) {
+    // console.log(e);
+    map.getView().animate({
+      center:e.coordinate,
+      zoom: Math.max (map.getView().getZoom(),16)
+    });
+  });
+  
+// The end of the searching area side 
+
+
+
+
+
+
+
+
+
+
+
+
+
+// 5-The Start  of the the down ol screeen entitled  TE53 map overview 
+    var layers = [
+      new ol.layer.Tile({	source: new ol.source.OSM()	}),
+      new ol.layer.Tile({
+        source: new ol.source.Stamen({
+        layer: 'toner'
+        })
+      })
+    ];
+    var layers2 = [
+      new ol.layer.Tile({	source: new ol.source.OSM()	}),
+      new ol.layer.Tile({
+        source: new ol.source.Stamen({
+        layer: 'toner'
+        })
+      })
+    ];
+	
+	
+
+    // a-New control on the map
+    var ov = new ol.control.Overview({
+      layers: layers,
+      minZoom: $("#minzoom").val(),
+      maxZoom: $("#maxzoom").val(),
+      rotation: $("#rotate").prop("checked"),
+      align: $("#align").val(),
+      panAnimation: "elastic"
+    });
+    map.addControl(ov);
+
+    //b- New control outside the map (styled)
+    var ov2 = new ol.control.Overview({
+      target: $(".overview").get(0),
+      layers: layers2,
+      minZoom: $("#minzoom").val(), maxZoom: $("#maxzoom").val(),
+      rotation: $("#rotate").prop("checked"),
+      style: [ new ol.style.Style({
+        image: new ol.style.Circle({
+          fill: new ol.style.Fill({
+            color: 'rgba(0,255,102, 1)'
+          }),
+          stroke: new ol.style.Stroke({
+            width: 7,
+            color: 'rgba(0,255,102, 0.8)'
+          }),
+          radius: 5
+        }),
+        stroke: new ol.style.Stroke({
+          width: 3,
+          color: "rgba(0,255,102,1)",
+          lineDash: [5, 5]
+        })
+      })]
+    });
+    map.addControl(ov2);
+
+    // c-Options changes
+    function setOVLayer (e) {
+      ov.getOverviewMap().getLayers().getArray()[$(e).val()].setVisible(true);
+      ov.getOverviewMap().getLayers().getArray()[1-$(e).val()].setVisible(false);
+    }
+    $("#rotate").on("change", function () {
+      ov.rotation = ov2.rotation=$("#rotate").prop("checked");
+      ov.setView();
+      ov2.setView();
+    });
+    $("#minzoom").on("change", function () {
+      ov.minZoom = ov2.minZoom=Number($("#minzoom").val());
+      ov.setView();
+      ov2.setView();
+    });
+    $("#maxzoom").on("change", function () {
+      ov.maxZoom = ov2.maxZoom=Number($("#maxzoom").val());
+      ov.setView();
+      ov2.setView();
+    });
+// End of the the down ol screeen entitled  TE53 map overview 
+
+
+
+
+//add a zoom in and zoom out screen
+var full_sc = new ol.control.FullScreen({label:'F'});
+	map.addControl(full_sc);
+	
+	var zoom = new ol.control.Zoom({zoomInLabel:'+', zoomOutLabel:'-'});
+	map.addControl(zoom);
+	
+	var slider = new ol.control.ZoomSlider();
+	map.addControl(slider);
+// end for the zoom in and zoom out screen	
+	
+
+
+
+  
+// 6-set the mouse control to show the coordinate 
+var mouse_position = new ol.control.MousePosition();
+	map.addControl(mouse_position);
+// The end  of the the down ol screeen entitled  TE53 map overview 
+
+
+
+
+
+// 7-The start of the scale bar 
+
+    var ctrl = new ol.control.Scale({	});
+    map.addControl(ctrl);
+    map.addControl(new ol.control.ScaleLine());
+    
+    function setDiagonal(val) {
+      var res = Math.sqrt(window.screen.width*window.screen.width+window.screen.height*window.screen.height)/val; 
+      res = Math.round(res);
+      $('#ppi').val(res);
+      ctrl.set('ppi', res); 
+      ctrl.setScale()
+    }
+	
+//  end of the The start of the scale bar 
+
+
+
+
+//8- The start of the WMTS GET CAPABILITIES --- You just have to copy from the var cap of the map.wmtscapabilities.htlm page from the ol-ext page, you have also the scope to parse your url inside the service zone 
+  
+ var cap2 = new ol.control.WMTSCapabilities({ 
+    // target: $('.options').get(0),
+    target2: document.body,
+    // srs: ['EPSG:2154'],
+    cors: true,
+    services: {
+      'Géoportail-cartes' : 'https://wxs.ign.fr/cartes/geoportail/wmts?SERVICE=WMTS&VERSION=1.0.0&REQUEST=GetCapabilities',
+      'Géoportail-ortho' : 'https://wxs.ign.fr/ortho/geoportail/wmts?SERVICE=WMTS&VERSION=1.0.0&REQUEST=GetCapabilities',
+      'Géoportail-orthohisto' : 'https://wxs.ign.fr/orthohisto/geoportail/wmts?SERVICE=WMTS&VERSION=1.0.0&REQUEST=GetCapabilities',
+      'Géoportail-satellite' : 'https://wxs.ign.fr/satellite/geoportail/wmts?SERVICE=WMTS&VERSION=1.0.0&REQUEST=GetCapabilities',
+      'Géoportail-cartovecto' : 'https://wxs.ign.fr/cartovecto/geoportail/wmts?SERVICE=WMTS&VERSION=1.0.0&REQUEST=GetCapabilities',
+      'Géoportail-economie' : 'https://wxs.ign.fr/economie/geoportail/wmts?SERVICE=WMTS&VERSION=1.0.0&REQUEST=GetCapabilities',
+      'Géoportail-environnement' : 'https://wxs.ign.fr/environnement/geoportail/wmts?SERVICE=WMTS&VERSION=1.0.0&REQUEST=GetCapabilities',
+      'Géoportail-sol' : 'https://wxs.ign.fr/sol/geoportail/wmts?SERVICE=WMTS&VERSION=1.0.0&REQUEST=GetCapabilities',
+      'Géoportail-parcellaire' : 'https://wxs.ign.fr/parcellaire/geoportail/wmts?SERVICE=WMTS&VERSION=1.0.0&REQUEST=GetCapabilities',
+      'Géoportail-transports' : 'https://wxs.ign.fr/transports/geoportail/wmts?SERVICE=WMTS&VERSION=1.0.0&REQUEST=GetCapabilities',
+      'Géoportail-administratif' : 'https://wxs.ign.fr/administratif/geoportail/wmts?SERVICE=WMTS&VERSION=1.0.0&REQUEST=GetCapabilities',
+      'Géoportail-altimetrie' : 'https://wxs.ign.fr/altimetrie/geoportail/wmts?SERVICE=WMTS&VERSION=1.0.0&REQUEST=GetCapabilities',
+      'Géoportail-agriculture' : 'https://wxs.ign.fr/agriculture/geoportail/wmts?SERVICE=WMTS&VERSION=1.0.0&REQUEST=GetCapabilities',
+      'Géoportail-CLC' : 'https://wxs.ign.fr/clc/geoportail/wmts?SERVICE=WMTS&VERSION=1.0.0&REQUEST=GetCapabilities'
+    },
+    // Show trace in the console
+    trace: true
+  });
+  map.addControl(cap2);
+
+  cap2.on('load', function(e) {
+    map.addLayer(e.layer);
+    e.layer.set('legend', e.options.data.legend);
+    plink.setUrlParam('url', e.options.source.url);
+    plink.setUrlParam('layer', e.options.source.layer);
+  });
+
+  // Permalink
+  var url2 = plink.getUrlParam('url');
+  var layerName2 = plink.getUrlParam('layer');
+  if (url) {
+    console.log(layerName2)
+    cap.loadLayer(url2, layerName2);
+  } else {
+    map.addLayer(new ol.layer.Tile({ name:"OSM", source: new ol.source.OSM() }));
+  }
+
+  /* Export .carte file */
+  function exportCarte() {
+    var lonlat2 = ol.proj.toLonLat(map.getView().getCenter());
+    var carte2 = {
+      "param": {
+        "lon": lonlat[0],
+        "lat": lonlat[1],
+        "rot": 0,
+        "zoom": map.getView().getZoom(),
+        "titre": "WMS",
+        "description": ""
+      },
+      "layers": []
+    }
+    map.getLayers().getArray().forEach(function(l) {
+      if (l.get('WMS')) {
+        carte.layers.push({
+          "wms": true,
+          "type": "WMS",
+          "name": l.get('title'),
+          "titre": l.get('title'),
+          "visibility": l.getVisible(),
+          "opacity": l.getOpacity(),
+          "copyright": l.getSource().getAttributions()()[0] || '&copy;',
+          "wmsparam": {
+            "layer": {
+              "title": l.get('title'),
+              "extent": l.get('extent'),
+              "minResolution": l.getMinResolution(),
+              "maxResolution": l.getMaxResolution()
+            },
+            "source": {
+            "url": l.getSource().getUrls()[0],
+            "projection": "EPSG:3857",
+            "crossOrigin": "anonymous",
+            "params": {
+              "LAYERS": l.getSource().getParams().LAYERS,
+              "FORMAT": l.getSource().getParams().FORMAT,
+              "VERSION": l.getSource().getParams().VERSION,
+              "MAP": l.getSource().getParams().MAP || ''
+            }
+            },
+            "attribution": {
+              "html": l.getSource().getAttributions()()[0] || '&copy;'
+            },
+            "originator": [],
+            "legend": []
+          },
+          "maxZoomCluster": 20,
+          "radiusCluster": 40
+        })
+      }
+    });
+    var blob2 = new Blob([JSON.stringify(carte, null, ' ')], {type: 'text/plain;charset=utf-8'});
+    saveAs(blob2, 'carte.carte2');
+  } 
+ 
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+// 9-The start of the adding a wms bottom
+//var cap = new ol.control.WMSCapabilities({ 
+    // target: $('.options').get(0),
+//    target: document.body,
+//    srs: ['EPSG:3948'],
+//    cors: true,
+//    optional: 'token',
+//    services: {
+//      'terrestre' :'https://ows.terrestris.de/osm/service'
+//    },
+//    // Show trace in the console
+//    trace: true
+//  });
+//  map.addControl(cap);
+
+//  cap.on('load', function(e) {
+//    map.addLayer(e.layer);
+//    e.layer.set('legend', e.options.data.legend);
+//    plink.setUrlParam('url', e.options.source.url);
+//    plink.setUrlParam('layer', e.options.source.params.LAYERS);
+//  });
+
+//  var url = plink.getUrlParam('url');
+//  var layerName = plink.getUrlParam('layer');
+//  if (url) {
+//    cap.loadLayer(url, layerName);
+//  }
+
+  /* Export .carte file */
+//  function exportCarte() {
+//    var lonlat = ol.proj.toLonLat(map.getView().getCenter());
+//    var carte = {
+//      "param": {
+//        "lon": lonlat[0],
+//        "lat": lonlat[1],
+//        "rot": 0,
+//        "zoom": map.getView().getZoom(),
+//        "titre": "WMS",
+//        "description": ""
+//      },
+//      "layers": []
+//    }
+//    map.getLayers().getArray().forEach(function(l) {
+//      if (l.getSource() instanceof ol.source.TileWMS) {
+//        var wms = {
+//          "wms": true,
+//          "type": "WMS",
+//          "name": l.get('title'),
+//          "titre": l.get('title'),
+//          "visibility": l.getVisible(),
+//          "opacity": l.getOpacity(),
+//          "copyright": l.getSource().getAttributions()()[0] || '&copy;',
+//          "wmsparam": {
+//            "layer": {
+//              "title": l.get('title'),
+//              "extent": l.get('extent'),
+//              "minResolution": l.getMinResolution(),
+//              "maxResolution": l.getMaxResolution()
+//            },
+//            "source": {
+//            "url": l.getSource().getUrls()[0],
+//            "projection": "EPSG:3948",
+//            "crossOrigin": "anonymous",
+//            "params": {
+//              "LAYERS": l.getSource().getParams().LAYERS,
+//              "FORMAT": l.getSource().getParams().FORMAT,
+//              "VERSION": l.getSource().getParams().VERSION
+//            }
+//            },
+//            "attribution": {
+//              "html": l.getSource().getAttributions()()[0] || '&copy;'
+//            },
+//            "originator": [],
+//            "legend": []
+//          },
+//          "maxZoomCluster": 20,
+//          "radiusCluster": 40
+//        }
+//        if (l.getSource().getParams().MAP) wms.wmsparam.source.params.MAP = l.getSource().getParams().MAP;
+//        carte.layers.push(wms)
+//      }
+//    });
+//    var blob = new Blob([JSON.stringify(carte, null, ' ')], {type: 'text/plain;charset=utf-8'});
+//    saveAs(blob, 'carte.carte');
+//  }
+
+// The end of the adding a wms bottom  
+
+
+
+
+  
+  
+  
+
+  
+
+
+
+
+  
+  </script>
+  
+</body>
+</html>
